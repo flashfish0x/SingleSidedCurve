@@ -338,10 +338,22 @@ def live_strategy_usdt(Strategy):
     yield strategy
 
 @pytest.fixture
+def live_strategy_usdt_ib_v5(Strategy):
+    strategy = Strategy.at('0x65A8efC842D2Ba536d3F781F504A1940f61124b4')
+
+    yield strategy
+
+@pytest.fixture
 def live_strategy_wbtc(Strategy):
     strategy = Strategy.at('0x40b04B3ed9845B8Be200Aa2D9C3eDC2bE0a5f01f')
 
     yield strategy
+@pytest.fixture
+def latest_clonable_strat(Strategy):
+    strategy = Strategy.at('0x9F7982a604add48BBBbe1644A9a6C4Db5E759Ad7')
+
+    yield strategy
+
 
 @pytest.fixture
 def live_vault(pm):
@@ -356,9 +368,9 @@ def live_usdt_vault(pm):
     yield vault
 
 @pytest.fixture
-def strategy_usdt_ib(strategist,Strategy, keeper, live_usdt_vault, live_strategy_wbtc, ibCurvePool, ib3CRV, ibyvault):
+def strategy_usdt_ib(strategist,Strategy, keeper, live_usdt_vault, latest_clonable_strat, ibCurvePool, ib3CRV, ibyvault, zeroaddress):
     #strategy = strategist.deploy(Strategy, live_usdt_vault, 500_000*1e6, 3600, 500, ibCurvePool, ib3CRV, ibyvault,3, True)
-    tx = live_strategy_wbtc.cloneSingleSidedCurve(live_usdt_vault, strategist, strategist, strategist, 500_000*1e6, 3600, 500, ibCurvePool, ib3CRV, ibyvault,3, True, "ssc ib3crv",{'from': strategist})
+    tx = latest_clonable_strat.cloneSingleSidedCurve(live_usdt_vault, strategist, 2_000_000*1e6, 3600, 500, ibCurvePool, ib3CRV, ibyvault, 3, zeroaddress, True, "ssc ib3crv",{'from': strategist})
     yield Strategy.at(tx.return_value)
 
 
